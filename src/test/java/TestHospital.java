@@ -22,7 +22,6 @@ import com.entity.Patient;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-
 public class TestHospital {
 	private Hospital hospital;
 
@@ -70,8 +69,6 @@ public class TestHospital {
 				+ outstationCount * 100 / totalPatientCount + "%";
 		Assert.assertEquals(bangaloreVsOutstationPercentage, "33% Vs 33%");
 	}
-	
-	
 
 	@Test(description = "Test Patient count for city within specified Registration Date Range")
 	public void testPatientCountForCityAndWithinRegistrationDateRange() throws ParseException {
@@ -111,16 +108,17 @@ public class TestHospital {
 
 		Assert.assertEquals(hospital.getPatientCountforCity(hos, "Bangalore"), 1);
 	}
-	
-	@Test(description = "Test Banglore Patient percentage vs OutstationPatient Percentage within Last N Appointment Days")
+
+	@Test(description = "Test Banglore Patient percentage vs OutstationPatient Percentage within Last N Registration Days")
 	public void testPatientPercentageForOtherCityNameVsBangaloreWithinLastNDays() throws ParseException {
 		int totalPatientCount = hospital.getPatient().size();
-		Instant now = Instant.now(); //current date
+		Instant now = Instant.now(); // current date
 		Instant before = now.minus(Duration.ofDays(10));
 		Date fromDate = sdf.parse(sdf.format(Date.from(before)));
 		Date toDate = sdf.parse(sdf.format(Date.from(now)));
 
-		int bangaloreCount = hospital.getPatientCountforLocationWithRegDateRange(hospital, "Bangalore", fromDate, toDate);
+		int bangaloreCount = hospital.getPatientCountforLocationWithRegDateRange(hospital, "Bangalore", fromDate,
+				toDate);
 		int outstationCount = hospital.getOutstationPatientCount(hospital, "Bangalore");
 		String bangaloreVsOutstationPercentage = bangaloreCount * 100 / totalPatientCount + "% Vs "
 				+ outstationCount * 100 / totalPatientCount + "%";
