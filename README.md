@@ -6,6 +6,7 @@
   3. Test Patient count for city
   4. Test Bangalore Patient percentage vs OutstationPatient Percentage
   5. Test Banglore Patient percentage vs OutstationPatient Percentage within specified Appointment Date Range
+  6. Test Banglore Patient percentage vs OutstationPatient Percentage within Last N Regisration Days
     
 * project Structure:
 
