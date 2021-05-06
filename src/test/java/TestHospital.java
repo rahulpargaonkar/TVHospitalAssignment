@@ -2,6 +2,8 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -68,6 +70,8 @@ public class TestHospital {
 				+ outstationCount * 100 / totalPatientCount + "%";
 		Assert.assertEquals(bangaloreVsOutstationPercentage, "33% Vs 33%");
 	}
+	
+	
 
 	@Test(description = "Test Patient count for city within specified Registration Date Range")
 	public void testPatientCountForCityAndWithinRegistrationDateRange() throws ParseException {
@@ -106,6 +110,21 @@ public class TestHospital {
 				.patient(patientList).build();
 
 		Assert.assertEquals(hospital.getPatientCountforCity(hos, "Bangalore"), 1);
+	}
+	
+	@Test(description = "Test Banglore Patient percentage vs OutstationPatient Percentage within Last N Appointment Days")
+	public void testPatientPercentageForOtherCityNameVsBangaloreWithinLastNDays() throws ParseException {
+		int totalPatientCount = hospital.getPatient().size();
+		Instant now = Instant.now(); //current date
+		Instant before = now.minus(Duration.ofDays(10));
+		Date fromDate = sdf.parse(sdf.format(Date.from(before)));
+		Date toDate = sdf.parse(sdf.format(Date.from(now)));
+
+		int bangaloreCount = hospital.getPatientCountforLocationWithRegDateRange(hospital, "Bangalore", fromDate, toDate);
+		int outstationCount = hospital.getOutstationPatientCount(hospital, "Bangalore");
+		String bangaloreVsOutstationPercentage = bangaloreCount * 100 / totalPatientCount + "% Vs "
+				+ outstationCount * 100 / totalPatientCount + "%";
+		Assert.assertEquals(bangaloreVsOutstationPercentage, "33% Vs 33%");
 	}
 
 }
