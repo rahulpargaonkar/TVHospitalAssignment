@@ -1,0 +1,65 @@
+{
+	"hospitalName": "Chinmay Mission",
+	"hospitalCity": "Bangalore",
+	"patient": [
+		{
+			"name": "Ajay S",
+			"city": "Bangalore",
+			"phoneNumber": "990000909",
+			"age": 23,
+			"emailId": "Dasd@211",
+			"disease": {
+				"isCriticaldisease": true,
+				"diseaseName": "Knee Replacement"
+			},
+			"appointment": {
+				"appointmentCity": "Bangalore",
+				"apointmentDateTime": "18/05/2021",
+				"registrationDateTime": "29/04/2021",
+				"doctor": {
+					"doctorName": "Dr. Joshi",
+					"doctorCity": "Bangalore"
+				}
+			}
+		},
+		{
+			"name": "Madhu S",
+			"city": "Bangalore",
+			"phoneNumber": "990000909",
+			"age": 23,
+			"emailId": "Dasd@211",
+			"disease": {
+				"isCriticaldisease": false,
+				"diseaseName": "Mild fever"
+			},
+			"appointment": {
+				"appointmentCity": "Bangalore",
+				"apointmentDateTime": "21/05/2021",
+				"registrationDateTime": "23/04/2021",
+				"doctor": {
+					"doctorName": "Dr. Krishna",
+					"doctorCity": "Bangalore"
+				}
+			}
+		},
+		{
+			"name": "Sujay P",
+			"city": "Pune",
+			"age": 43,
+			"emailId": "Dasdasd@211",
+			"disease": {
+				"isCriticaldisease": true,
+				"diseaseName": "High BP"
+			},
+			"appointment": {
+				"appointmentCity": "Bangalore",
+				"apointmentDateTime": "13/05/2021",
+				"registrationDateTime": "20/04/2021",
+				"doctor": {
+					"doctorName": "Dr. Deshmukh",
+					"doctorCity": "Pune"
+				}
+			}
+		}
+	]
+}
