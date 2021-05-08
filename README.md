@@ -1,12 +1,10 @@
 # TestVagrant Hospital Assignment
   This project  test driven approach to solve the  TV Hospital assignment.
   Below tests has been covered:
-  1. Test Patient count for city within specified Appointment Date Range
-  2. Test Patient count for city within specified Registration Date Range
-  3. Test Patient count for city
-  4. Test Bangalore Patient percentage vs OutstationPatient Percentage
-  5. Test Banglore Patient percentage vs OutstationPatient Percentage within specified Appointment Date Range
-  6. Test Banglore Patient percentage vs OutstationPatient Percentage within Last N Regisration Days
+  1. Test Local Patient percentage vs OutstationPatient Percentage
+  2. Test Local Patient percentage vs OutstationPatient Percentage within Last N Registration Days
+  3. Test local Patient visit in  Last N Visit Days
+
     
 * project Structure:
 
