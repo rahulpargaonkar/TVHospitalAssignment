@@ -1,4 +1,8 @@
 package com.entity;
+
+import java.util.Date;
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -10,10 +14,8 @@ import lombok.Setter;
 @Setter
 public class Patient {
 	private String name;
-	private int age;
-	private String city;
-	private AppointmentDetails appointment;
-	private String phoneNumber;
-	private String emailId;
-	private Disease disease;
+	private City city;
+	private Date registrationDate;
+	private List<Visit> visit;
+
 }

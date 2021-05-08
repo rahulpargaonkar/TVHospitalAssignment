@@ -1,36 +1,26 @@
 import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import com.controller.ObjectBuilder;
-import com.entity.AppointmentDetails;
-import com.entity.Disease;
-import com.entity.Doctor;
 import com.entity.Hospital;
-import com.entity.Patient;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import com.utility.DateHelper;
 
 public class TestHospital {
 	private Hospital hospital;
-
-	private SimpleDateFormat sdf;
+	private DateHelper dateHelper;
 
 	@BeforeClass
 	public void setup() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		hospital = (Hospital) ObjectBuilder.buildObject(Hospital.class, "testPatient.json");
-		sdf = new SimpleDateFormat("dd/MM/yyyy");
+		dateHelper = new DateHelper();
 
 	}
 
@@ -40,89 +30,36 @@ public class TestHospital {
 		System.out.println("Test description== " + test.description());
 	}
 
-	@Test(description = "Test Patient count for city within specified Appointment Date Range")
-	public void testPatientCountForCityAndWithinAppointMentDateRange() throws ParseException {
-		Date fromDate = sdf.parse("01/05/2021");
-		Date toDate = sdf.parse("15/05/2021");
-		Assert.assertEquals(hospital.getPatientCountforLocationWithDateRange(hospital, "Pune", fromDate, toDate), 1);
-
+	@Test(description = "Test Local Patient percentage vs OutstationPatient Percentage")
+	public void testPatientPercentageForOtherCityNameVslocal() {
+		String localVsOutstationPercentage = hospital.getLocalVsOutstationPatientPercentage();
+		Assert.assertEquals(localVsOutstationPercentage, "75.00 % Vs 25.00 %");
 	}
 
-	@Test(description = "Test Bangalore Patient percentage vs OutstationPatient Percentage")
-	public void testPatientPercentageForOtherCityNameVsBangalore() {
-		int totalPatientCount = hospital.getPatient().size();
-		int bangaloreCount = hospital.getPatientCountforCity(hospital, "Bangalore");
-		int outstationCount = totalPatientCount - bangaloreCount;
-		String bangaloreVsOutstationPercentage = bangaloreCount * 100 / totalPatientCount + "% Vs "
-				+ outstationCount * 100 / totalPatientCount + "%";
-		Assert.assertEquals(bangaloreVsOutstationPercentage, "66% Vs 33%");
+	@Test(description = "Test Local Patient percentage vs OutstationPatient Percentage within Last N Registration Days")
+	public void testPatientPercentageForOtherCityNameVsLocalWithinLastNDays() throws ParseException {
+		List<Date> dateRangeList = dateHelper.getFormatedDatesForRange(3);
+		Date fromDate = dateRangeList.get(0);
+		Date toDate = dateRangeList.get(1);
+
+		int localCount = hospital.getPatientCountforLocalWithRegistrationDateRange(fromDate, toDate);
+		int outstationCount = hospital.getOutstationPatientCount();
+
+		String localVsOutstationPercentage = hospital.getformattedLocalVsOutstationCount(localCount, outstationCount);
+
+		Assert.assertEquals(localVsOutstationPercentage, "50.00 % Vs 25.00 %");
 	}
 
-	@Test(description = "Test Banglore Patient percentage vs OutstationPatient Percentage within specified Appointment Date Range")
-	public void testPatientPercentageForOtherCityNameVsBangaloreWithinAppointmentDateRange() throws ParseException {
-		int totalPatientCount = hospital.getPatient().size();
-		Date fromDate = sdf.parse("01/05/2021");
-		Date toDate = sdf.parse("20/05/2021");
-		int bangaloreCount = hospital.getPatientCountforLocationWithDateRange(hospital, "Bangalore", fromDate, toDate);
-		int outstationCount = hospital.getOutstationPatientCount(hospital, "Bangalore");
-		String bangaloreVsOutstationPercentage = bangaloreCount * 100 / totalPatientCount + "% Vs "
-				+ outstationCount * 100 / totalPatientCount + "%";
-		Assert.assertEquals(bangaloreVsOutstationPercentage, "33% Vs 33%");
-	}
+	@Test(description = "Test local Patient visit in  Last N Visit Days")
+	public void testNumberOfLocalPatientVisitedInLastNdays() throws ParseException {
+		List<Date> dateRangeList = dateHelper.getFormatedDatesForRange(3);
+		Date fromDate = dateRangeList.get(0);
+		Date toDate = dateRangeList.get(1);
 
-	@Test(description = "Test Patient count for city within specified Registration Date Range")
-	public void testPatientCountForCityAndWithinRegistrationDateRange() throws ParseException {
-		Date fromDate = sdf.parse("01/04/2021");
-		Date toDate = sdf.parse("25/04/2021");
-		Assert.assertEquals(hospital.getPatientCountforLocationWithRegDateRange(hospital, "Pune", fromDate, toDate), 1);
-
-	}
-
-	@Test(description = "Test Patient count for city")
-	public void testPatientCountForCityName() {
-		Assert.assertEquals(hospital.getPatientCountforCity(hospital, "Bangalore"), 2);
-	}
-
-	@Test(description = "Test Patient count for city")
-	public void testPatientCountForCityName1() throws ParseException {
-		Patient patient1 = Patient.builder().name("Sunil T").city("Bangalore").phoneNumber("234234234")
-				.disease(Disease.builder().diseaseName("Throat Infection").isCriticaldisease(false).build())
-				.appointment(AppointmentDetails.builder().apointmentDateTime(sdf.parse("19/05/2021"))
-						.appointmentCity("Bangalore").registrationDateTime(sdf.parse("16/04/2021"))
-						.doctor(Doctor.builder().doctorName("Dr. Ram").doctorCity("Bangalore").build()).build())
-				.build();
-
-		Patient patient2 = Patient.builder().name("Sunil T1").city("Mumbai").phoneNumber("2324234234")
-				.disease(Disease.builder().diseaseName("Eye Problem").isCriticaldisease(true).build())
-				.appointment(AppointmentDetails.builder().apointmentDateTime(sdf.parse("04/05/2021"))
-						.appointmentCity("Bangalore").registrationDateTime(sdf.parse("06/04/2021"))
-						.doctor(Doctor.builder().doctorName("Dr. Sham").doctorCity("Bangalore").build()).build())
-				.build();
-
-		List<Patient> patientList = new ArrayList<>();
-
-		patientList.add(patient1);
-		patientList.add(patient2);
-		Hospital hos = Hospital.builder().hospitalName("Chinmaya Mission").hospitalCity("Bangalore")
-				.patient(patientList).build();
-
-		Assert.assertEquals(hospital.getPatientCountforCity(hos, "Bangalore"), 1);
-	}
-
-	@Test(description = "Test Banglore Patient percentage vs OutstationPatient Percentage within Last N Registration Days")
-	public void testPatientPercentageForOtherCityNameVsBangaloreWithinLastNDays() throws ParseException {
-		int totalPatientCount = hospital.getPatient().size();
-		Instant now = Instant.now(); // current date
-		Instant before = now.minus(Duration.ofDays(10));
-		Date fromDate = sdf.parse(sdf.format(Date.from(before)));
-		Date toDate = sdf.parse(sdf.format(Date.from(now)));
-
-		int bangaloreCount = hospital.getPatientCountforLocationWithRegDateRange(hospital, "Bangalore", fromDate,
+		int localpatientVisitedCountWithinLastNdays = hospital.getLocalpatientVisitedCountWithinLastNdays(fromDate,
 				toDate);
-		int outstationCount = hospital.getOutstationPatientCount(hospital, "Bangalore");
-		String bangaloreVsOutstationPercentage = bangaloreCount * 100 / totalPatientCount + "% Vs "
-				+ outstationCount * 100 / totalPatientCount + "%";
-		Assert.assertEquals(bangaloreVsOutstationPercentage, "33% Vs 33%");
+		Assert.assertEquals(localpatientVisitedCountWithinLastNdays, 3);
+
 	}
 
 }

@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+
+Hospital --> Patient
+Patient  --> Visit
+
+
+
+
+
+class Hospital{
+-HospitalName: String
+-hospitalCity: enum
+-patient: List<Patient>
+}
+
+
+class Visit{
+- visitDateTime: Date
+- doctorName: String
+}
+
+
+
+class Patient{
+     -name:String
+	 -city:City
+	 -registrationDate:Date
+	 -visit:List<Visit>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml
