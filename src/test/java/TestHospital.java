@@ -17,10 +17,8 @@ import com.entity.Visit;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-
 public class TestHospital {
 	private Hospital hospital;
-	
 
 	@BeforeClass
 	public void setup() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
@@ -78,8 +76,6 @@ public class TestHospital {
 
 		hospital = Hospital.builder().hospitalCity(City.Bangalore).patient(patientList).build();
 
-
-
 	}
 
 	@BeforeMethod
@@ -90,22 +86,13 @@ public class TestHospital {
 
 	@Test(description = "Test Local Patient percentage vs OutstationPatient Percentage")
 	public void testLocalVsOutstationPatientPercentage() {
-
-		int localCount = hospital.getLocalPatientCount();
-		int outstationCount = hospital.getOutstationPatientCount();
-		String localVsOutstationPercentage = hospital.getformattedLocalVsOutstationPercentage(localCount,
-				outstationCount);
+		String localVsOutstationPercentage = hospital.getLocalVsOutstationPercentage();
 		Assert.assertEquals(localVsOutstationPercentage, "75.00 % Vs 25.00 %");
 	}
 
 	@Test(description = "Test Local Patient percentage vs OutstationPatient Percentage within Last N Registration Days")
 	public void testLocalVsOutstationPatientPercentageWithinLastNRegitrationDays() throws ParseException {
-
-		int localCount = hospital.getLocalPatientRegistrationCountinLastNdays(3);
-		int outstationCount = hospital.getOutstationPatientCount();
-
-		String localVsOutstationPercentage = hospital.getformattedLocalVsOutstationPercentage(localCount,
-				outstationCount);
+		String localVsOutstationPercentage = hospital.getLocalVsOutstationPercentageWithinLastNdays(3);
 
 		Assert.assertEquals(localVsOutstationPercentage, "50.00 % Vs 50.00 %");
 	}

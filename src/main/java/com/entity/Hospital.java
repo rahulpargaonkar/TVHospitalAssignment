@@ -18,34 +18,25 @@ public class Hospital {
 	private List<Patient> patient;
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	public int getLocalPatientCount() {
-		return getPatient().stream().filter(p -> p.getCity().name().equals(hospitalCity.name()))
-				.collect(Collectors.toList()).size();
+	public String getLocalVsOutstationPercentage() {
+		int totalPatientCount =getPatient().size();
+		int outstationCount = totalPatientCount - getLocalPatients(getPatient()).size();
+		int localCount = totalPatientCount - outstationCount;
+		return getformattedString(localCount, outstationCount);
 
 	}
 
-	public int getOutstationPatientCount() {
-		int outStationPatientCount = getPatient().size() - getLocalPatientCount();
-		return outStationPatientCount;
-	}
-
-	public String getformattedLocalVsOutstationPercentage(int localCount, int outstationCount) {
-		int totalPatientCount = localCount+outstationCount;
-		double localPercentage = ((localCount * 100) / totalPatientCount);
-		double outstationPercentage = outstationCount * 100 / totalPatientCount;
-		String localVsOutstationPercentage = String.format("%.2f" + " %% Vs " + "%.2f " + "%%", localPercentage,
-				outstationPercentage);
-		return localVsOutstationPercentage;
+	public String getLocalVsOutstationPercentageWithinLastNdays(int days) {
+		List<Patient> patientWithinLastNdays = getRegistredPatientsInLastNdays(days);
+		int localCount = getLocalPatients(patientWithinLastNdays).size();
+		int outstationCount = patientWithinLastNdays.size() - localCount;
+		return getformattedString(localCount, outstationCount);
 	}
 
 	public int getLocalpatientVisitedCountWithinLastNdays(int days) {
-
-		List<Patient> local = getPatient().stream()
-				.filter(localpredicate -> localpredicate.getCity().name().equals(hospitalCity.name()))
-				.collect(Collectors.toList());
 		List<Boolean> isPatientVisited = new ArrayList<Boolean>();
-		local.forEach(p -> {
-			isPatientVisited.add(p.isPatientVistedInLastNDays(days));
+		getLocalPatients(getPatient()).forEach(patient -> {
+			isPatientVisited.add(patient.isPatientVistedInLastNDays(days));
 		});
 
 		isPatientVisited.removeIf(patient -> !patient.booleanValue());
@@ -53,10 +44,28 @@ public class Hospital {
 
 	}
 
-	public int getLocalPatientRegistrationCountinLastNdays(int days) {
+	private String getformattedString(int localCount, int outstationCount) {
+		int totalPatientCount = localCount + outstationCount;
+		double localPercentage = ((localCount * 100) / totalPatientCount);
+		double outstationPercentage = outstationCount * 100 / totalPatientCount;
+
+		String localVsOutstationPercentage = String.format("%.2f" + " %% Vs " + "%.2f " + "%%", localPercentage,
+				outstationPercentage);
+		return localVsOutstationPercentage;
+	}
+
+	public List<Patient> getRegistredPatientsInLastNdays(int days) {
 		LocalDate fromDate = LocalDate.now().minusDays(days);
-		return getPatient().stream().filter(p -> p.getRegistrationDate().isAfter(fromDate))
-				.filter(p -> p.getCity().name().equals(hospitalCity.name())).collect(Collectors.toList()).size();
+		return getPatient().stream().filter(patient -> patient.getRegistrationDate().isAfter(fromDate))
+				.collect(Collectors.toList());
+
+	}
+
+	private List<Patient> getLocalPatients(List<Patient> patientList) {
+		// TODO Auto-generated method stub
+		return patientList.stream()
+				.filter(localpredicate -> localpredicate.getCity().name().equals(hospitalCity.name()))
+				.collect(Collectors.toList());
 
 	}
 
