@@ -10,11 +10,11 @@
 
    - class Diagram:
    
-    <img src="./classDagram.png" alt="Your image title" width="250"/>
+    <img src="./classDagram.png" alt="Your image title" width="250" height="400"/>
     
    - Test Data( Hospital object Tree)
     
-     <img src="./TestDataView.PNG" alt="Your image title" width="1500"/>
+     <img src="./TestDataView.PNG" alt="Your image title" width="300"/>
     
     
     
@@ -23,8 +23,7 @@
   1. Programming language: Java
   2. Build management tool: Maven
   3. Unit Testing Framework: TestNG
-  4. Json  library: Google Gson
-  5. Lombok library used for minimize boilerplate code   
+  4. Lombok library used for minimize boilerplate code   
     
 
  * Prerequisite:
